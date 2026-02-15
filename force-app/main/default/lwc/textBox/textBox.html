@@ -1,25 +1,46 @@
 <template>
-    <lightning-card>
-        <template if:true={message}>
-            <p><lightning-formatted-text value="Twilio message"></lightning-formatted-text></p>
-            <p><lightning-formatted-text value={message}></lightning-formatted-text></p>
-        </template>
-        <div class="slds-p-around_medium lgc-bg">
-            <lightning-input 
-                type="text" 
-                label="Name"
-                value={userName}
-                placeholder="type here..." 
-                maxlength="10"
-                onchange={handleOnChange}>
-            </lightning-input>
-            <lightning-button 
-                variant="brand" 
-                label="Send" 
-                title="Send your name to receive a greeting" 
-                onclick={handleClick} 
-                class="slds-m-left_x-small">
-            </lightning-button>
-        </div>
-    </lightning-card>
+  <lightning-card>
+    <template if:true={message}>
+      <p>
+        <lightning-formatted-text
+          value="Twilio message"
+        ></lightning-formatted-text>
+      </p>
+      <p>
+        <lightning-formatted-text value={message}></lightning-formatted-text>
+      </p>
+    </template>
+    <div class="slds-p-around_medium lgc-bg">
+      <lightning-input
+        type="text"
+        label="Name"
+        value={userName}
+        placeholder="enter your name..."
+        maxlength="10"
+        onchange={handleOnChange}
+        required
+      >
+      </lightning-input>
+      <lightning-input
+        type="number"
+        label="Age"
+        value={userAge}
+        max="110"
+        min="0"
+        placeholder="enter your age..."
+        message-when-range-overflow="Woah, that's a lot!, are you a turtle?"
+        message-when-range-underflow="Hmm, you haven't been born yet?"
+        onchange={handleAgeOnChange}
+      >
+      </lightning-input>
+      <lightning-button
+        variant="brand"
+        label="Send"
+        title="Send your name to receive a greeting"
+        onclick={handleClick}
+        class="slds-m-left_x-small"
+      >
+      </lightning-button>
+    </div>
+  </lightning-card>
 </template>

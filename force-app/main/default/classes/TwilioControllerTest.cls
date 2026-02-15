@@ -12,7 +12,7 @@
  * coverage, and prevent regressions. All Apex classes are
  * required to have at least 75% code coverage in order to be deployed
  * to a production org. In addition, all triggers must have some code coverage.
- * 
+ *
  * The @isTest class annotation indicates this class only contains test
  * methods. Classes defined with the @isTest annotation do not count against
  * the org size limit for all Apex scripts.
@@ -21,33 +21,38 @@
  */
 @isTest
 private class TwilioControllerTest {
+  @isTest
+  static void testGreeting() {
+    Test.setMock(HttpCalloutMock.class, new TwilioMock());
 
-     @isTest
-    static void testGreeting(){
-        Test.setMock(HttpCalloutMock.class, new TwilioMock());
-        
-        Test.startTest();
-        String response = TwilioController.getMessage('Lulu');
-        Test.stopTest();
-        
-        Assert.areEqual('Hola, Lulu',response, 'El mensaje recibido no es el esperado');
+    Test.startTest();
+    String response = TwilioController.getMessage('Lulu');
+    Test.stopTest();
+
+    Assert.areEqual(
+      'Hola, Lulu',
+      response,
+      'El mensaje recibido no es el esperado'
+    );
+  }
+
+  @isTest
+  static void testGreetingWithoutName() {
+    Test.setMock(HttpCalloutMock.class, new TwilioMock());
+
+    Test.startTest();
+
+    try {
+      TwilioController.getMessage('');
+      Assert.fail('An AuraHandledException was expected');
+    } catch (Exception e) {
+      Assert.isInstanceOfType(
+        e,
+        AuraHandledException.class,
+        'Exception must be AuraHandledException'
+      );
     }
-    
-    
-    @isTest
-    static void testGreetingWithoutName(){
-        Test.setMock(HttpCalloutMock.class, new TwilioMock());
-        
-        Test.startTest();
-        
-        try {
-            TwilioController.getMessage('');
-            Assert.fail('An AuraHandledException was expected');
-        } catch (Exception e) {
-            Assert.isInstanceOfType(e, AuraHandledException.class, 'Exception must be AuraHandledException');
-        }
-        
-        Test.stopTest();
-    }
-    
+
+    Test.stopTest();
+  }
 }
