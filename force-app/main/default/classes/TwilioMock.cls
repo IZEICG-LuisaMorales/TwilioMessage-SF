@@ -13,7 +13,7 @@ global class TwilioMock implements HttpCalloutMock {
     Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(
       requestBody
     );
-    if (!body.containsKey('name')) {
+    if (!body.containsKey('name') || String.isBlank((String)body.get('name'))) {
       response.setStatusCode(400);
       response.setBody('{"error":"The name is required"}');
       return response;
@@ -28,14 +28,14 @@ global class TwilioMock implements HttpCalloutMock {
     response.setStatusCode(200);
     String msj;
 
-    if (age != null) {
+    if (age != null && age>0) {
       Integer plusAge = Integer.valueOf(age) + 1;
       msj =
         'Hola, ' +
         name +
         ', te recuerdo que ya casi tienes ' +
         plusAge +
-        ' anios';
+        ' años!';
     } else {
       msj = 'Hola, ' + name;
     }
