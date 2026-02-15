@@ -10,22 +10,15 @@ public with sharing class TwilioController {
       request.setEndpoint(ENDPOINT);
       request.setMethod('POST');
       request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+
       if (String.isNotBlank(name) || age > 0) {
-        TwilioPayload payload = new TwilioPayload(name, age);
-        request.setBody(JSON.serialize(payload));
+        String body = createBody(name, age);
+        request.setBody(body);
       }
 
       HttpResponse response = http.send(request);
       if (response.getStatusCode() == 200) {
-        Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(
-          response.getBody()
-        );
-
-        if (results.containsKey('message')) {
-          return (String) results.get('message');
-        } else {
-          return 'No message received.';
-        }
+        return getResponseMessage(response.getBody());
       } else {
         throw new CalloutException(
           'Twilio Error: ' + response.getStatus() + ' ' + response.getBody()
@@ -33,6 +26,23 @@ public with sharing class TwilioController {
       }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  private String createBody(String name, Integer age){
+    String trimedName = name.trim();
+    trimedName = trimedName.capitalize(); 
+    TwilioPayload payload = new TwilioPayload(trimedName, age);
+    return JSON.serialize(payload);
+  }
+
+  private String getResponseMessage(String body){
+    Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(body);
+
+    if (results.containsKey('message')) {
+      return (String) results.get('message');
+    } else {
+      return 'No message received.';
     }
   }
 
