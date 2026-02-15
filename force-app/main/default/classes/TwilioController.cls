@@ -14,14 +14,14 @@ public with sharing class TwilioController {
       //validacion de parametros
       if (String.isNotBlank(name) || age > 0) {
         //construccion del body
-        String body = createBody(name, age);
+        String body = TwilioController.createBody(name, age);
         request.setBody(body);
       }
 
       HttpResponse response = http.send(request);
       if (response.getStatusCode() == 200) {
         //obtener el mensaje de la respuesta de Twilio
-        return getResponseMessage(response.getBody());
+        return TwilioController.getResponseMessage(response.getBody());
       } else {
         throw new CalloutException(
           'Twilio Error: ' + response.getStatus() + ' ' + response.getBody()
@@ -33,14 +33,14 @@ public with sharing class TwilioController {
   }
 
   //construccion del body, dandole formato al nombre
-  private String createBody(String name, Integer age){
+  private static String createBody(String name, Integer age){
     String trimedName = name.trim();
     trimedName = trimedName.capitalize(); 
     TwilioPayload payload = new TwilioPayload(trimedName, age);
     return JSON.serialize(payload);
   }
 
-  private String getResponseMessage(String body){
+  private static String getResponseMessage(String body){
     //obtener los elementos del body
     Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(body);
 
