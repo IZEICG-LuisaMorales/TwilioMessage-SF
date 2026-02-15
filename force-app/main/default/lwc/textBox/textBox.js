@@ -20,6 +20,7 @@ export default class TextBox extends LightningElement {
       this.showToast("Error", "Please enter a name", "warning");
       return;
     }
+    //llamando imperativamente al TwilioController
     getMessage({ name: this.userName, age: this.userAge })
       .then((resp) => {
         this.message = resp;
@@ -33,6 +34,7 @@ export default class TextBox extends LightningElement {
       });
   }
 
+  // metodo para mostrar un toast con mensaje informativo (error, success, warning, etc)
   showToast(title, message, variant) {
     const event = new ShowToastEvent({
       title: title,

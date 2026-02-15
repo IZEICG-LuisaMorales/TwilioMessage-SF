@@ -21,36 +21,39 @@
  */
 @isTest
 private class TwilioControllerTest {
+  //test para validar el mensaje de respuesta de Twilio con solo el nombre
   @isTest
   static void testGreeting() {
     Test.setMock(HttpCalloutMock.class, new TwilioMock());
 
     Test.startTest();
-    String response = TwilioController.getMessage('Lulu', 0);
+    String response = TwilioController.getMessage('Luisa', 0);
     Test.stopTest();
 
     Assert.areEqual(
-      'Hola, Lulu',
+      'Hola, Luisa',
       response,
       'El mensaje recibido no es el esperado'
     );
   }
 
+  //test para validar el mensaje de respuesta de Twilio con el nombre y la edad
   @isTest
   static void testGreetingWithAge() {
     Test.setMock(HttpCalloutMock.class, new TwilioMock());
 
     Test.startTest();
-    String response = TwilioController.getMessage('Lulu', 20);
+    String response = TwilioController.getMessage('Luisa', 20);
     Test.stopTest();
 
     Assert.areEqual(
-      'Hola, Lulu, te recuerdo que ya casi tienes 21 años!',
+      'Hola, Luisa, te recuerdo que ya casi tienes 21 años!',
       response,
       'El mensaje recibido no es el esperado'
     );
   }
 
+  //test para validar el mensaje de respuesta de Twilio sin nombre ni edad
   @isTest
   static void testGreetingWithoutName() {
     Test.setMock(HttpCalloutMock.class, new TwilioMock());
@@ -71,6 +74,7 @@ private class TwilioControllerTest {
     Test.stopTest();
   }
 
+  //test para validar el mensaje de respuesta de Twilio con solo la edad
   @isTest
   static void testGreetingJustWithAge() {
     Test.setMock(HttpCalloutMock.class, new TwilioMock());

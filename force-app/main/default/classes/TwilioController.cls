@@ -11,13 +11,16 @@ public with sharing class TwilioController {
       request.setMethod('POST');
       request.setHeader('Content-Type', 'application/json;charset=UTF-8');
 
+      //validacion de parametros
       if (String.isNotBlank(name) || age > 0) {
+        //construccion del body
         String body = createBody(name, age);
         request.setBody(body);
       }
 
       HttpResponse response = http.send(request);
       if (response.getStatusCode() == 200) {
+        //obtener el mensaje de la respuesta de Twilio
         return getResponseMessage(response.getBody());
       } else {
         throw new CalloutException(
@@ -29,6 +32,7 @@ public with sharing class TwilioController {
     }
   }
 
+  //construccion del body, dandole formato al nombre
   private String createBody(String name, Integer age){
     String trimedName = name.trim();
     trimedName = trimedName.capitalize(); 
@@ -37,8 +41,10 @@ public with sharing class TwilioController {
   }
 
   private String getResponseMessage(String body){
+    //obtener los elementos del body
     Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(body);
 
+    //verificar si el mensaje se incluye en el body
     if (results.containsKey('message')) {
       return (String) results.get('message');
     } else {
@@ -46,6 +52,7 @@ public with sharing class TwilioController {
     }
   }
 
+  //clase para la serializacion del body
   public class TwilioPayload {
     public String name;
     public Integer age;
