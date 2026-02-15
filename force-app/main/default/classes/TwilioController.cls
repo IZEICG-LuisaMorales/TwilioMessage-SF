@@ -1,0 +1,48 @@
+public with sharing class TwilioController {
+    private static final String ENDPOINT = 'https://sv-pruebas-9382-dev.twil.io/example';
+
+    @AuraEnabled()
+    public static string getMessage(String name){
+        try {
+            Http http = new Http();
+            HttpRequest request = new HttpRequest();
+            
+            request.setEndpoint(ENDPOINT);
+            request.setMethod('POST');
+            request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+            if(String.isNotBlank(name)){
+                TwilioPayload payload = new TwilioPayload(name);
+                request.setBody(JSON.serialize(payload));
+            }
+
+            HttpResponse response = http.send(request);
+            if(response.getStatusCode() == 200) {
+                Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+                
+                if (results.containsKey('message')) {
+                    return (String)results.get('message');
+                } else {
+                    return 'No message received.';
+                }
+            } else {
+                throw new CalloutException('Twilio Error: ' + response.getStatus() + ' ' + response.getBody());
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    public class TwilioPayload {
+        public String name;
+        public Integer age;
+
+        public TwilioPayload(String name, Integer age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public TwilioPayload(String name){
+            this.name= name;
+        }
+    }
+}
