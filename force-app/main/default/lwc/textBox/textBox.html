@@ -1,0 +1,25 @@
+<template>
+    <lightning-card>
+        <template if:true={message}>
+            <p><lightning-formatted-text value="Twilio message"></lightning-formatted-text></p>
+            <p><lightning-formatted-text value={message}></lightning-formatted-text></p>
+        </template>
+        <div class="slds-p-around_medium lgc-bg">
+            <lightning-input 
+                type="text" 
+                label="Name"
+                value={userName}
+                placeholder="type here..." 
+                maxlength="10"
+                onchange={handleOnChange}>
+            </lightning-input>
+            <lightning-button 
+                variant="brand" 
+                label="Send" 
+                title="Send your name to receive a greeting" 
+                onclick={handleClick} 
+                class="slds-m-left_x-small">
+            </lightning-button>
+        </div>
+    </lightning-card>
+</template>
