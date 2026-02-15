@@ -26,11 +26,26 @@ private class TwilioControllerTest {
     Test.setMock(HttpCalloutMock.class, new TwilioMock());
 
     Test.startTest();
-    String response = TwilioController.getMessage('Lulu');
+    String response = TwilioController.getMessage('Lulu', 0);
     Test.stopTest();
 
     Assert.areEqual(
       'Hola, Lulu',
+      response,
+      'El mensaje recibido no es el esperado'
+    );
+  }
+
+  @isTest
+  static void testGreetingWithAge() {
+    Test.setMock(HttpCalloutMock.class, new TwilioMock());
+
+    Test.startTest();
+    String response = TwilioController.getMessage('Lulu', 20);
+    Test.stopTest();
+
+    Assert.areEqual(
+      'Hola, Lulu, te recuerdo que ya casi tienes 21 años!',
       response,
       'El mensaje recibido no es el esperado'
     );
@@ -43,7 +58,27 @@ private class TwilioControllerTest {
     Test.startTest();
 
     try {
-      TwilioController.getMessage('');
+      TwilioController.getMessage('',0);
+      Assert.fail('An AuraHandledException was expected');
+    } catch (Exception e) {
+      Assert.isInstanceOfType(
+        e,
+        AuraHandledException.class,
+        'Exception must be AuraHandledException'
+      );
+    }
+
+    Test.stopTest();
+  }
+
+  @isTest
+  static void testGreetingJustWithAge() {
+    Test.setMock(HttpCalloutMock.class, new TwilioMock());
+
+    Test.startTest();
+
+    try {
+      TwilioController.getMessage('',20);
       Assert.fail('An AuraHandledException was expected');
     } catch (Exception e) {
       Assert.isInstanceOfType(
